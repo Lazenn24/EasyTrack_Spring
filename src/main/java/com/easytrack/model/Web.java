@@ -1,19 +1,18 @@
 package com.easytrack.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @Entity
 @Table(name="web")
+@ToString(exclude = "items")
 public class Web implements Serializable {
 
     @Id
@@ -27,7 +26,6 @@ public class Web implements Serializable {
     private String priceTag;
 
     @OneToMany(mappedBy = "webId",
-            cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)
     private List<Item> items;
 }

@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface WebRepository extends JpaRepository<Web, String> {
+
+    Web findByName(String name);
 }

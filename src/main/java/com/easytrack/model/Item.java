@@ -1,69 +1,45 @@
 package com.easytrack.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Getter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Objects;
 
-@Getter
-@Setter
+@Data
+@ToString(exclude = {"webId", "userItems"})
 @NoArgsConstructor
 @Entity
-@Table(name="item")
 public class Item extends  AuditModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotNull
     private Double currentPrice;
 
-    @NotBlank
+    @NotNull
     private Double maxPrice;
 
-    @NotBlank
+    @NotNull
     private Double minPrice;
 
     @Column(unique = true)
-    @NotBlank
+    @NotNull
     private String url;
 
-    @OneToMany(mappedBy = "item",
-                cascade = CascadeType.ALL,
-                fetch = FetchType.LAZY)
-    @OrderBy("checkedDate DESC")
+    @OneToMany(mappedBy = "item")
     private List<UserItem> userItems;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "web_id", nullable = false)
-    @NotBlank
+    @JsonIgnore
     private Web webId;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Item)) return false;
-        Item item = (Item) o;
-        return getId().equals(item.getId()) &&
-                Objects.equals(getCurrentPrice(), item.getCurrentPrice()) &&
-                Objects.equals(getMaxPrice(), item.getMaxPrice()) &&
-                Objects.equals(getMinPrice(), item.getMinPrice()) &&
-                getUrl().equals(item.getUrl()) &&
-                Objects.equals(getUserItems(), item.getUserItems()) &&
-                Objects.equals(getWebId(), item.getWebId());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getCurrentPrice(), getMaxPrice(), getMinPrice(), getUrl(), getUserItems(), getWebId());
-    }
 }

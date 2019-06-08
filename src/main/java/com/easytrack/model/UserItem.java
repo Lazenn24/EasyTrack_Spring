@@ -1,5 +1,10 @@
 package com.easytrack.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,41 +15,28 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Objects;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @Entity
-@Table(name="user_item")
 public class UserItem implements Serializable {
 
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EmbeddedId
-    private UserItemId id;
+    private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("userId")
+
+
+    @ManyToOne
+    @JsonIgnore //para evitar recursion infinita
+    @JoinColumn(name="user")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("itemId")
+    @ManyToOne
+    @JsonIgnore //para evitar recursion infinita
+    @JoinColumn(name = "item")
     private Item item;
 
-    @NotBlank
+    @Column(name="item_name")
     private String name;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof UserItem)) return false;
-        UserItem userItem = (UserItem) o;
-        return Objects.equals(getId(), userItem.getId()) &&
-                Objects.equals(getUser(), userItem.getUser()) &&
-                Objects.equals(getItem(), userItem.getItem()) &&
-                Objects.equals(getName(), userItem.getName());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getUser(), getItem(), getName());
-    }
 }

@@ -1,28 +1,30 @@
 package com.easytrack.model;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-public class ItemWName {
+public class CustomItem {
 
     private String email;
 
     private String name;
 
-    private Double currentPrice;
+    private Date date;
 
-    private Double minPrice;
+    private String currentPrice;
 
-    private Double maxPrice;
+    private String minPrice;
+
+    private String maxPrice;
 
     private List<PriceHistory> priceHistoryItem;
 
     private String url;
+
 
 }
